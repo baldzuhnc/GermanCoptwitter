@@ -127,3 +127,15 @@ ostwestse <- ggplot(sentijoin) +
   labs(x = "Bundesländer", y = "Number of tweets") +
   scale_fill_manual(values=c("red", "grey", "darkgreen"))
 
+normostwest <- sentijoin %>%
+  group_by(ostwest) %>% summarise(Negative = ((sum(SentimentLabel == "negative")/n())*100), 
+                               Positive = ((sum(SentimentLabel == "positive")/n())*100),
+                               Neutral = ((sum(SentimentLabel == "neutral")/n())*100))
+  
+normostwestsenti  <- gather(normostwest, key = "Sentiment", value = "Score", Negative, Positive, Neutral, factor_key = T)
+
+test <- ggplot(data = normostwestsenti, aes(x=ostwest, y=Score, fill = Sentiment)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values=c("red", "darkgreen", "grey")) +
+  ylab("Percent of tweets") +
+  xlab("Former part of germany")
